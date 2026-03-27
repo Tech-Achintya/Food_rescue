@@ -10,7 +10,7 @@ const packageRoutes = require('./routes/packages');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use('/auth', authRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/food', foodRoutes);
 app.use('/api/packages', packageRoutes);

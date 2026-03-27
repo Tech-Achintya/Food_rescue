@@ -97,29 +97,29 @@ export default function DeliveryForm({ user }) {
     <div className="p-4 bg-white rounded shadow">
       <h3 className="text-lg font-semibold mb-3">Create Food Package</h3>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-col md:flex-row gap-2 mb-4">
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="p-2 border rounded"
+          className="p-2 border rounded w-full md:w-auto"
         />
         <input
           type="text"
           placeholder="Hostel name"
           value={hostel}
           onChange={(e) => setHostel(e.target.value)}
-          className="p-2 border rounded flex-1"
+          className="p-2 border rounded w-full md:flex-1"
         />
       </div>
 
       {rows.map((r, idx) => (
-        <div className="flex gap-2 mb-2 items-center" key={idx}>
+        <div className="flex flex-col md:flex-row gap-2 mb-2 items-center" key={idx}>
           {/* Type */}
           <select
             value={r.type}
             onChange={(e) => onRowChange(idx, 'type', e.target.value)}
-            className="p-2 border rounded"
+            className="p-2 border rounded w-full md:w-auto"
           >
             <option value="VEG">Veg</option>
             <option value="NONVEG">Non-Veg</option>
@@ -129,7 +129,7 @@ export default function DeliveryForm({ user }) {
           <select
             value={r.category_id}
             onChange={(e) => handleCategoryChange(idx, e.target.value, r.type)}
-            className="p-2 border rounded"
+            className="p-2 border rounded w-full md:w-auto"
           >
             <option value="">Select Category</option>
             {categories
@@ -145,7 +145,7 @@ export default function DeliveryForm({ user }) {
           <select
             value={r.item_id}
             onChange={(e) => onRowChange(idx, 'item_id', e.target.value)}
-            className="p-2 border rounded"
+            className="p-2 border rounded w-full md:w-auto"
           >
             <option value="">Select Item</option>
             {(itemsByCategory[r.category_id] || []).map((item) => (
@@ -161,7 +161,7 @@ export default function DeliveryForm({ user }) {
             value={r.quantity}
             min={1}
             onChange={(e) => onRowChange(idx, 'quantity', +e.target.value)}
-            className="w-20 p-2 border rounded"
+            className="w-full md:w-20 p-2 border rounded"
           />
 
           {/* Remove */}

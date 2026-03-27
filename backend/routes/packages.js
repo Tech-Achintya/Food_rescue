@@ -3,6 +3,27 @@ const router = express.Router();
 const pool = require('../db');
 const { v4: uuidv4 } = require('uuid');
 
+// ✅ DELETE package by ID
+router.delete("/:packageId", async (req, res) => {
+  const { packageId } = req.params; // this is like "PKG-1761908124772"
+
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM packages WHERE package_code = ?",
+      [packageId]
+    );
+
+    if (result.affectedRows > 0) {
+      res.status(200).json({ message: "Package deleted successfully." });
+    } else {
+      res.status(404).json({ message: "Package not found." });
+    }
+  } catch (err) {
+
+    console.error("Error deleting package:", err);
+    res.status(500).json({ message: "Server error deleting package." });
+  }
+});
 /** Create a package (mess head creates) with items array: [{food_item_id,quantity}] */
 router.post('/', async (req,res) => {
   try {
@@ -33,8 +54,10 @@ router.post('/:id/accept', async (req,res) => {
   try {
     const packageId = req.params.id;
     const { ngo_id, delivery_person_name, delivery_person_contact, arrival_time } = req.body;
-    // update package status
-    await pool.query('UPDATE packages SET status = ? WHERE id = ?', ['ACCEPTED', packageId]);
+    
+    // Update package status to ACCEPTED and store the NGO ID
+    await pool.query('UPDATE packages SET status = ?, accepted_by = ? WHERE id = ?', 
+      ['ACCEPTED', ngo_id, packageId]);
     const [r] = await pool.query('INSERT INTO deliveries (package_id, ngo_id, delivery_person_name, delivery_person_contact, arrival_time) VALUES (?,?,?,?,?)', [packageId, ngo_id, delivery_person_name, delivery_person_contact, arrival_time]);
     const [d] = await pool.query('SELECT * FROM deliveries WHERE id=?',[r.insertId]);
     res.json(d[0]);
@@ -64,4 +87,35 @@ router.get('/:id/delivery', async (req,res) => {
 });
 
 /** Additional endpoints you may need: update status, get deliveries, delete package, etc. */
+
+/** NGO submits feedback and rating for a package */
+router.post('/:id/feedback', async (req, res) => {
+  try {
+    const packageId = req.params.id;
+    const { rating, comment, ngo_id } = req.body;
+    
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+    
+    // Update package with rating and comment
+    await pool.query(
+      'UPDATE packages SET rating = ?, feedback = ?, feedback_by = ? WHERE id = ?', 
+      [rating, comment || '', ngo_id, packageId]
+    );
+    
+    // Get updated package
+    const [updatedPackage] = await pool.query('SELECT * FROM packages WHERE id = ?', [packageId]);
+    
+    if (updatedPackage.length === 0) {
+      return res.status(404).json({ error: 'Package not found' });
+    }
+    
+    res.json(updatedPackage[0]);
+  } catch (err) {
+    console.error('Error submitting feedback:', err);
+    res.status(500).json({ error: 'Server error submitting feedback' });
+  }
+});
+
 module.exports = router;

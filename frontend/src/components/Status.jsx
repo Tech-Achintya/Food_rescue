@@ -47,12 +47,12 @@ export default function Status() {
 
   return (
     <div className="h-full">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-lg">
-        <h2 className="text-2xl font-bold mb-2">Order Status</h2>
+      <div className="bg-linear-to-r from-[#a7c3ff] to-[#6d9bff] text-[#2C4A4E] p-4 rounded-t-lg">
+        <h2 className="text-2xl font-bold mb-2">Order status</h2>
         <p className="text-blue-100">Track your food rescue orders</p>
       </div>
       
-      <div className="p-6 bg-white rounded-b-lg shadow-lg max-h-96 overflow-y-auto">
+      <div className="p-6 bg-white rounded-b-lg shadow-lg max-h-175 overflow-y-auto">
         {packages.length === 0 ? (
           <div className="text-center py-8">
             <div className="text-gray-500 text-lg">No orders yet</div>

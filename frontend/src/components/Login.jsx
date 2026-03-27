@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { post } from '../api';
+import backgroundImg from '../../../images/backGround_login.jpg';
+import logoImg from '../../../images/Logo_login.jpg';
+
 
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState('login'); // "login" or "register"
@@ -10,12 +13,10 @@ export default function Login({ onLogin }) {
   const submit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (!contact.trim() || !role) {
       alert('Please enter contact and role');
       return;
     }
-    // If registering, ensure name provided
     if (mode === 'register' && !name.trim()) {
       alert('Please enter name to register');
       return;
@@ -23,13 +24,9 @@ export default function Login({ onLogin }) {
 
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
-      // Always include name (keeps compatibility if backend expects it)
-      const payload =
-        mode === 'login'
-          ? { name: name.trim(), contact: contact.trim(), role }
-          : { name: name.trim(), contact: contact.trim(), role };
-
+      const payload = { name: name.trim(), contact: contact.trim(), role };
       const res = await post(endpoint, payload);
+
       console.log(`${mode} response:`, res);
 
       if (res.error) {
@@ -40,10 +37,7 @@ export default function Login({ onLogin }) {
       if (mode === 'register') {
         alert('Registration successful — you can now log in.');
         setMode('login');
-        // keep contact so user can quickly login, clear name if you want:
-        // setName('');
       } else {
-        // Login success: pass user object to parent
         onLogin(res);
       }
     } catch (err) {
@@ -53,69 +47,81 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow">
-      <h2 className="text-xl mb-4 text-center font-semibold">
-        {mode === 'login' ? 'Login' : 'Register'} ({role})
-      </h2>
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${backgroundImg})` }}
+    >
+      <div className="bg-white bg-opacity-95 rounded-xl shadow-2xl p-8 w-full max-w-md mx-4">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <img src={logoImg} alt="Save N Serve" className="w-100 h-35" />
+        </div>
 
-      <form onSubmit={submit} className="space-y-3">
-        {/* Name is shown always to avoid mismatch */}
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          className="w-full p-2 border rounded"
-        />
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          {mode === 'login' ? 'Login' : 'Register'} ({role})
+        </h2>
 
-        <input
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-          placeholder="Contact Number"
-          className="w-full p-2 border rounded"
-        />
+        {/* Form */}
+        <form onSubmit={submit} className="space-y-4">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
 
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="w-full p-2 border rounded"
-        >
-          <option value="MESS">Mess Head</option>
-          <option value="NGO">NGO User</option>
-        </select>
+          <input
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            placeholder="Contact Number"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
 
-        <button
-          className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          type="submit"
-        >
-          {mode === 'login' ? 'Login' : 'Register'}
-        </button>
-      </form>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          >
+            <option value="MESS">Mess Head</option>
+            <option value="NGO">NGO User</option>
+          </select>
 
-      <p className="text-center mt-3 text-sm">
-        {mode === 'login' ? (
-          <>
-            Don’t have an account?{' '}
-            <button
-              type="button"
-              onClick={() => setMode('register')}
-              className="text-blue-600 underline"
-            >
-              Register
-            </button>
-          </>
-        ) : (
-          <>
-            Already registered?{' '}
-            <button
-              type="button"
-              onClick={() => setMode('login')}
-              className="text-blue-600 underline"
-            >
-              Login
-            </button>
-          </>
-        )}
-      </p>
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+          >
+            {mode === 'login' ? 'Login' : 'Register'}
+          </button>
+        </form>
+
+        {/* Switch mode */}
+        <p className="text-center mt-4 text-sm text-gray-700">
+          {mode === 'login' ? (
+            <>
+              Don’t have an account?{' '}
+              <button
+                type="button"
+                onClick={() => setMode('register')}
+                className="text-green-700 font-semibold underline"
+              >
+                Register
+              </button>
+            </>
+          ) : (
+            <>
+              Already registered?{' '}
+              <button
+                type="button"
+                onClick={() => setMode('login')}
+                className="text-green-700 font-semibold underline"
+              >
+                Login
+              </button>
+            </>
+          )}
+        </p>
+      </div>
     </div>
   );
 }
