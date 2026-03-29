@@ -2,7 +2,7 @@ import { useState } from "react";
 import Status from "../components/Status";
 import NGOView from "../components/NGOView";
 import Feedback from "../components/Feedback";
-import dashLogo from '../../../images/dashBoard_logo.jpg';
+import dashLogo from '../assets/Images/dashBoard_logo.jpg';
 
 export default function NGODashboard({ user, onLogout }) {
   const [activeView, setActiveView] = useState("dashboard");

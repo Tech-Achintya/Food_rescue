@@ -5,7 +5,7 @@ import ManageFood from "../components/ManageFood";
 import HamburgerMenu from "../components/HamburgerMenu";
 import History from "../components/History";
 import NGOContact from "../components/NGOContact";
-import dashLogo from "../../../images/dashBoard_logo.jpg";
+import dashLogo from "../assets/Images/dashBoard_logo.jpg";
 import DeletePackage from "../components/DeletePackage";
 
 export default function MessDashboard({ user, onLogout }) {

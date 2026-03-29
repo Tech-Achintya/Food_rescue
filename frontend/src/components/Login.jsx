@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { post } from '../api';
-import backgroundImg from '../../../images/backGround_login.jpg';
-import logoImg from '../../../images/Logo_login.jpg';
+import backgroundImg from '../assets/Images/backGround_login.jpg';
+import logoImg from '../assets/Images/Logo_login.jpg';
 
 
 export default function Login({ onLogin }) {
